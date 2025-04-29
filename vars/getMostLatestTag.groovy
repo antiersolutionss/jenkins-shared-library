@@ -1,19 +1,22 @@
 def call(String repoUrl, String credentialsId) {
-    // Load credentials securely from Jenkins
     withCredentials([usernamePassword(
         credentialsId: credentialsId,
         usernameVariable: 'SWR_USER',
         passwordVariable: 'SWR_PASSWORD'
     )]) {
-        // Execute skopeo command and parse output with jq
-        def latestTag = sh(script: """
-            skopeo list-tags \
-                --creds="${SWR_USER}:${SWR_PASSWORD}" \
-                docker://${repoUrl} \
-                | jq -r '.Tags | map(select(. != "latest")) | sort | last'
-        """, returnStdout: true).trim()
-
-        echo "Latest tag in SWR: ${latestTag}"
-        return latestTag
+        try {
+            def tags = sh(script: """
+                skopeo list-tags \
+                    --creds="${SWR_USER}:${SWR_PASSWORD}" \
+                    docker://${repoUrl} \
+                    | jq -r '.Tags[] | select(. != "latest")'
+            """, returnStdout: true).trim()
+            
+            def latestTag = tags.split('\n').sort().last()
+            return latestTag ?: null
+        } catch (Exception e) {
+            echo "Failed to fetch tags: ${e}"
+            return null
+        }
     }
 }
