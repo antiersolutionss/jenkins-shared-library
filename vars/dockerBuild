@@ -1,0 +1,6 @@
+def call() {
+    echo "Building Docker image: ${imageName}"
+    sh "ls"
+    sh "sudo docker build -t env.REPO_URL ."
+    sh "IMAGE BUILT SUCCESSFULLY!!"
+}
