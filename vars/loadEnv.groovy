@@ -1,7 +1,7 @@
 def call(String credentialsId) {
     withCredentials([file(credentialsId: credentialsId, variable: 'ENV_FILE')]) {
         // Copy the secret file into the workspace
-        sh 'cp ${ENV_FILE} .env'
+        sh 'sudo cp ${ENV_FILE} .env'
 
         // Load environment variables from .env file
         def envFile = readFile('.env')
