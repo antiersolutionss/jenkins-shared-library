@@ -1,6 +1,6 @@
 def call() {
     sh '''
-        sudo docker push ${REGISTRY}/${REPO}:${BUILD_ID}
+        sudo docker push ${REPO_URL}:${env.NEXT_TAG}
         sudo docker logout ${REGISTRY}
     '''
 }
