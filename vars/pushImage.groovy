@@ -1,6 +1,6 @@
-def call() {
+def call(String repoUrl, String nextTag, String registry) {
     sh """
-        sudo docker push ${env.REPO_URL}:${env.NEXT_TAG}
-        sudo docker logout ${env.REGISTRY}
+        sudo docker push ${repoUrl}:${nextTag}
+        sudo docker logout ${registry}
     """
 }
