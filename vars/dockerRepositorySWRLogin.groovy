@@ -1,5 +1,7 @@
-def dockerRepoLogin(String username, String password, String registry) {
-    sh """
-        docker login -u ${username} -p ${password} ${registry}
-    """
+def call(String credentialsId, String registry) {
+    withCredentials([usernamePassword(credentialsId: credentialsId, usernameVariable: 'USR', passwordVariable: 'PSW')]) {
+        sh """
+            docker login -u $USR -p $PSW ${registry}
+        """
+    }
 }
