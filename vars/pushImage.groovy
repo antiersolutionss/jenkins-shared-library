@@ -1,5 +1,5 @@
-def call(string REPO_URL , string NEXT_TAG) {
-        sh '''
-            docker push ${env.REPO_URL}:${env.NEXT_TAG}
-        '''
+def call(String REPO_URL, String NEXT_TAG) {
+    sh """
+        docker push ${REPO_URL}:${NEXT_TAG}
+    """
 }
