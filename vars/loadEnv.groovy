@@ -1,19 +1,13 @@
 def call(String credentialsId) {
     withCredentials([file(credentialsId: credentialsId, variable: 'ENV_FILE')]) {
-        sh '''
-            #!/bin/bash
-            set -e
+        // Read the .env file into a Map
+        def props = readProperties file: ENV_FILE
 
-            # Copy the env file
-            cp "$ENV_FILE" .env
+        // Inject all keys into the Jenkins environment
+        props.each { key, value ->
+            env[key] = value
+        }
 
-            # Clean up and export valid lines
-            grep -v '^#' .env | grep '=' | sed 's/^/export /' > env_export.sh
-
-            chmod +x env_export.sh
-
-            echo "Generated env_export.sh:"
-            cat env_export.sh
-        '''
+        echo "✅ Loaded environment variables from ${credentialsId}"
     }
 }
