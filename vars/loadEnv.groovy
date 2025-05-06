@@ -20,5 +20,7 @@ def call(String credentialsId) {
         }
 
         echo "Environment variables loaded from ${credentialsId}."
+         // List all environment variables
+        sh "printenv"
     }
 }
