@@ -1,17 +1,18 @@
 def call(String credentialsId) {
     withCredentials([file(credentialsId: credentialsId, variable: 'ENV_FILE')]) {
         sh '''
-            # Copy the secret file
-            sudo cp "$ENV_FILE" .env
+            #!/bin/bash
+            set -e
 
-            # Transform it into a shell-exportable script
-           sudo  awk -F ': ' '{gsub(/'\''/, "", $2); print "export " $1 "=" $2}' .env > env_export.sh
+            # Copy the env file
+            cp "$ENV_FILE" .env
 
-            # Make it executable
-            sudo chmod +x env_export.sh
+            # Clean up and export valid lines
+            grep -v '^#' .env | grep '=' | sed 's/^/export /' > env_export.sh
 
-            # Optional: show the generated file
-            echo "Transformed environment file:"
+            chmod +x env_export.sh
+
+            echo "Generated env_export.sh:"
             cat env_export.sh
         '''
     }
