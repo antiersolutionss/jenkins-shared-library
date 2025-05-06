@@ -24,7 +24,7 @@ def call(Map args) {
                 echo "No tags found, returning 1.0.0"
                 return "1.0.0"
             }
-
+          echo "Tags found: ${tags}"
             // Check if the latest tag matches semantic versioning format
             // Regular expression for x.y.z format (e.g., 1.2.3)
             def semanticVersionPattern = /^\d+\.\d+\.\d+$/
@@ -41,3 +41,4 @@ def call(Map args) {
         }
     }
 }
+
