@@ -9,11 +9,11 @@ def call(Map args) {
         if (credentialsId) {
             echo "🚀 SSH Deploying to staging using sshagent credential '${credentialsId}'..."
             sshagent(credentials: [credentialsId]) {
-                sh 'ssh -vvv -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
+                sh 'ssh  -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
             }
         } else {
             echo "🚀 SSH Deploying to staging using default system SSH keys..."
-            sh 'ssh -vvv -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
+            sh 'ssh  -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
         }
     }
 }
