@@ -3,6 +3,17 @@ def call(Map args) {
         error("Missing required parameters: scriptPath and serverIp must be specified")
     }
     
-    echo "🚀 SSH Deploying to ${args.serverIp} using script ${args.scriptPath}..."
-    sh "ssh -o StrictHostKeyChecking=no root@${args.serverIp} '${args.scriptPath}'"
+    def credentialsId = args.credentialsId
+    
+    withEnv(["TARGET_IP=${args.serverIp}", "SCRIPT_PATH=${args.scriptPath}"]) {
+        if (credentialsId) {
+            echo "🚀 SSH Deploying to staging using sshagent credential '${credentialsId}'..."
+            sshagent(credentials: [credentialsId]) {
+                sh 'ssh -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
+            }
+        } else {
+            echo "🚀 SSH Deploying to staging using default system SSH keys..."
+            sh 'ssh -o StrictHostKeyChecking=no root@$TARGET_IP "$SCRIPT_PATH"'
+        }
+    }
 }
